@@ -6,7 +6,7 @@
 #
 # Avleen Vig, 2012-09-13
 #
-# 
+#
 
 if [ "$(id -u)" = "0" ]; then
    echo "Hold on, tiger! Don't run this as root, k?" 1>&2
@@ -43,7 +43,7 @@ function get_content_body() {
 
 function get_content_length() {
     CONTENT_BODY="$1"
-    CONTENT_LENGTH=$( echo ${CONTENT_BODY} | wc -c )
+    CONTENT_LENGTH="$((${#CONTENT_BODY} + 1))"
 }
 
 while read line; do
@@ -65,7 +65,7 @@ done
 if [[ "$URL_PATH" == *..* ]]; then
     echo "HTTP/1.0 400 Bad Request\rn"
     echo "${REPLY_HEADERS}"
-    exit 
+    exit
 fi
 
 # If URL_PATH isn't set, return 400
@@ -108,7 +108,7 @@ elif [ -d ${URL_PATH} ]; then
         CONTENT_TYPE="text/plain"
         CONTENT_BODY=$( ls -la ${URL_PATH} )
     fi
-    CONTENT_LENGTH=$(echo "${CONTENT_BODY}" | wc -c)
+    get_content_length "$CONTENT_BODY"
     HTTP_RESPONSE="HTTP/1.0 200 OK"
 elif [ -d ${URL_PATH} -a ! -x ${URL_PATH} ]; then
     # Return 403 for non-listable directories
